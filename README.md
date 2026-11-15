@@ -2,9 +2,8 @@
 
 > **See what AWS is costing you — and where it's being wasted — on one dashboard, without ever opening the AWS console.**
 
-[![CI](https://github.com/mazkar-224/cloudguard-fyp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mazkar-224/cloudguard-fyp/actions/workflows/ci.yml)
-&nbsp;·&nbsp; **Live demo:** https://cloudcostguard-fyp.duckdns.org
-&nbsp;·&nbsp; **API docs (Swagger):** https://cloudcostguard-fyp.duckdns.org/api/v1/docs
+[![CI](https://github.com/mazkar-224/Cloud-cost-guard/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mazkar-224/Cloud-cost-guard/actions/workflows/ci.yml)
+&nbsp;·&nbsp; **Live demo:** currently offline (the EC2 instance is stopped to avoid AWS charges). See the [screenshots](#screenshots) below, or run it locally with the [quick start](#quick-start-local-development).
 
 CloudGuard is a self-hosted AWS cost-monitoring tool. You sign up, paste in a set
 of **read-only** AWS credentials, and CloudGuard pulls your spending from AWS Cost
@@ -117,8 +116,8 @@ instance behind automatic HTTPS.
 **Prerequisites:** Docker, Python 3.12+, Node.js 20+.
 
 ```bash
-git clone https://github.com/mazkar-224/cloudguard-fyp.git
-cd cloudguard
+git clone https://github.com/mazkar-224/Cloud-cost-guard.git
+cd Cloud-cost-guard
 
 # 1. Environment files
 cp .env.example .env                 # Postgres credentials for Docker Compose
@@ -169,7 +168,7 @@ docker compose -f docker-compose.prod.yml up -d --build
 docker compose -f docker-compose.prod.yml exec backend alembic upgrade head
 ```
 
-The full click-by-click runbook — EC2 launch, security-group rules, DNS, billing alarm, and teardown — is in **[docs/deploy.md](docs/deploy.md)**. CloudGuard is currently deployed this way at **https://cloudcostguard-fyp.duckdns.org**.
+The full click-by-click runbook — EC2 launch, security-group rules, DNS, billing alarm, and teardown — is in **[docs/deploy.md](docs/deploy.md)**. CloudGuard was deployed this way on AWS EC2 (the instance is currently stopped to avoid charges).
 
 ---
 

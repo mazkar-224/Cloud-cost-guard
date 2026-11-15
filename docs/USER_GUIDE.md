@@ -3,7 +3,7 @@
 This guide walks a brand-new user through everything: creating an account,
 connecting an AWS account with read-only keys, and reading each screen.
 
-**Live app:** https://cloudcostguard-fyp.duckdns.org
+**Live app:** currently offline (EC2 instance stopped to avoid AWS charges). Run it locally using the quick start in the main README.
 (or `http://localhost:5173` if you're running it locally).
 
 ---
