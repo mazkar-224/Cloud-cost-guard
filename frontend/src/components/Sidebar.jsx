@@ -19,7 +19,7 @@ function Sidebar() {
 
       <div className="px-4 py-5 border-b border-gray-100 dark:border-gray-800">
         <span className="text-sm font-semibold text-gray-900 dark:text-white tracking-tight">
-          CloudGuard
+          CloudCostGuard
         </span>
       </div>
 

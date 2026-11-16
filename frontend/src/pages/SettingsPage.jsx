@@ -78,7 +78,7 @@ function SettingsPage() {
       <div>
         <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-200">Settings</h2>
         <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-          Connect your AWS account so CloudGuard can read your costs and resources
+          Connect your AWS account so CloudCostGuard can read your costs and resources
         </p>
       </div>
 
@@ -88,7 +88,7 @@ function SettingsPage() {
         <div className="text-xs text-amber-800 dark:text-amber-200 space-y-1">
           <p className="font-medium">Use READ-ONLY credentials.</p>
           <p>
-            CloudGuard only ever reads your billing and resource data. Create an IAM user
+            CloudCostGuard only ever reads your billing and resource data. Create an IAM user
             with the AWS-managed <span className="font-mono">ReadOnlyAccess</span> policy — never
             an admin key.
           </p>

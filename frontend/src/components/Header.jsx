@@ -15,7 +15,7 @@ const PAGE_TITLES = {
 function Header() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const title = PAGE_TITLES[pathname] ?? 'CloudGuard'
+  const title = PAGE_TITLES[pathname] ?? 'CloudCostGuard'
 
   const [dark, setDark] = useDarkMode()
   const { sync, syncing } = useSync()

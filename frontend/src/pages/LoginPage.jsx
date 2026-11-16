@@ -44,7 +44,7 @@ function LoginPage() {
   }
 
   return (
-    <AuthShell title="Welcome back" subtitle="Sign in to your CloudGuard dashboard">
+    <AuthShell title="Welcome back" subtitle="Sign in to your CloudCostGuard dashboard">
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && <FormError message={error} />}
 

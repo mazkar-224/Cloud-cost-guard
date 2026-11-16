@@ -1,5 +1,5 @@
 /**
- * API client for the CloudGuard backend.
+ * API client for the CloudCostGuard backend.
  *
  * axios is used instead of raw fetch because it:
  *   - automatically throws on non-2xx responses (no manual `if (!res.ok)` checks)
