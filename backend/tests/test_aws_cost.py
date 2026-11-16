@@ -242,3 +242,49 @@ async def test_unexpected_aws_error_raises_runtime_error(aws_service):
 
     with pytest.raises(RuntimeError):
         await aws_service.get_daily_costs()
+
+
+# ---------------------------------------------------------------------------
+# Credits / refunds are excluded from the Cost Explorer query
+# ---------------------------------------------------------------------------
+
+@pytest.mark.anyio
+async def test_cost_query_excludes_credits_and_refunds(aws_service):
+    """
+    Credits are subtracted per service by AWS, so without a filter each service
+    nets to about $0. The query must exclude RECORD_TYPE Credit and Refund.
+    """
+    aws_service._client.get_cost_and_usage.return_value = {"ResultsByTime": []}
+
+    await aws_service.get_daily_costs(days=7)
+
+    # call_args.kwargs holds the keyword arguments boto3 was called with.
+    kwargs = aws_service._client.get_cost_and_usage.call_args.kwargs
+    assert kwargs["Filter"] == {
+        "Not": {
+            "Dimensions": {
+                "Key": "RECORD_TYPE",
+                "Values": ["Credit", "Refund"],
+            }
+        }
+    }
+
+
+# ---------------------------------------------------------------------------
+# Account lookup uses the service's own credentials (STS)
+# ---------------------------------------------------------------------------
+
+def test_fetch_account_id_returns_sts_account(aws_service):
+    """
+    fetch_account_id() must return the Account field from STS GetCallerIdentity,
+    called on the service's own STS client (same keys as the cost query).
+    """
+    aws_service._sts = MagicMock()
+    aws_service._sts.get_caller_identity.return_value = {
+        "Account": "123456789012",
+        "UserId": "AIDAEXAMPLE",
+        "Arn": "arn:aws:iam::123456789012:user/example",
+    }
+
+    assert aws_service.fetch_account_id() == "123456789012"
+    aws_service._sts.get_caller_identity.assert_called_once()

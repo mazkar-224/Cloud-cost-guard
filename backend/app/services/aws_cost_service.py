@@ -41,6 +41,16 @@ class AwsCostService:
             region_name="us-east-1",
         )
 
+        # STS tells us which AWS account these keys belong to. We use the SAME
+        # keys as Cost Explorer, so costs are always saved under the account
+        # they really came from. GetCallerIdentity needs no IAM permission.
+        self._sts = boto3.client(
+            "sts",
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            region_name="us-east-1",
+        )
+
     # ── Public async API ──────────────────────────────────────────────────────
 
     async def get_daily_costs(self, days: int = 30) -> list[dict]:
@@ -79,6 +89,11 @@ class AwsCostService:
         return await asyncio.to_thread(self._fetch_cost_by_service, start_date, end_date)
 
     # ── Private sync methods (run inside threads) ─────────────────────────────
+
+    def fetch_account_id(self) -> str:
+        """Return the 12-digit account number for these credentials.
+        Synchronous boto3 call, so only call it via asyncio.to_thread."""
+        return self._sts.get_caller_identity()["Account"]
 
     def _fetch_daily_costs(self, days: int) -> list[dict]:
         """Synchronous boto3 call — only call this via asyncio.to_thread."""
@@ -131,6 +146,18 @@ class AwsCostService:
                 # UnblendedCost = what you actually pay (not averaged across accounts)
                 Metrics=["UnblendedCost"],
                 GroupBy=[{"Type": "DIMENSION", "Key": "SERVICE"}],
+                # Leave out credits and refunds. Without this, AWS subtracts
+                # credits per service, every service nets to about $0, and the
+                # dashboard shows nothing even though real usage is charged.
+                # It also stops credits from hiding spikes from the detector.
+                Filter={
+                    "Not": {
+                        "Dimensions": {
+                            "Key": "RECORD_TYPE",
+                            "Values": ["Credit", "Refund"],
+                        }
+                    }
+                },
             )
         except ClientError as e:
             self._raise_friendly_error(e)

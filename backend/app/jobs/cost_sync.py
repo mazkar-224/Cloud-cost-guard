@@ -20,7 +20,6 @@ import logging
 from dataclasses import dataclass
 from datetime import date, timedelta
 
-import boto3
 from sqlalchemy import func, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -71,17 +70,14 @@ def _build_alert_value(account, candidate_date, scope, service_name, result) -> 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
-def _fetch_account_id_sync() -> str:
+def _fetch_account_id_sync(aws: AwsCostService) -> str:
     """
-    Call AWS STS to get the 12-digit account number for the current credentials.
-    Runs in a thread (via asyncio.to_thread) so it doesn't block the event loop.
+    Ask AWS which account the SYNC's credentials belong to.
+    Previously this used the .env keys, which could point at a different
+    account (or fail and fall back to 000000000000), so the same costs got
+    saved twice under two account IDs.
     """
-    sts = boto3.client(
-        "sts",
-        aws_access_key_id=settings.aws_access_key_id,
-        aws_secret_access_key=settings.aws_secret_access_key,
-    )
-    return sts.get_caller_identity()["Account"]
+    return aws.fetch_account_id()
 
 
 async def _get_or_create_account(db: AsyncSession, account_id_str: str) -> AwsAccount:
@@ -301,7 +297,7 @@ async def sync_cost_data(db: AsyncSession, aws: AwsCostService) -> SyncSummary:
 
     # ── Step 1: identify the AWS account ─────────────────────────────────────
     try:
-        account_id_str = await asyncio.to_thread(_fetch_account_id_sync)
+        account_id_str = await asyncio.to_thread(_fetch_account_id_sync, aws)
         logger.info("cost_sync: account_id=%s", account_id_str)
     except Exception as exc:
         logger.warning("cost_sync: STS call failed, using placeholder — %s", exc)
