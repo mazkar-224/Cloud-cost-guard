@@ -1,12 +1,12 @@
-# CloudGuard
+# CloudCostGuard
 
 > **See what AWS is costing you — and where it's being wasted — on one dashboard, without ever opening the AWS console.**
 
 [![CI](https://github.com/mazkar-224/Cloud-cost-guard/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/mazkar-224/Cloud-cost-guard/actions/workflows/ci.yml)
 &nbsp;·&nbsp; **Live demo:** currently offline (the EC2 instance is stopped to avoid AWS charges). See the [screenshots](#screenshots) below, or run it locally with the [quick start](#quick-start-local-development).
 
-CloudGuard is a self-hosted AWS cost-monitoring tool. You sign up, paste in a set
-of **read-only** AWS credentials, and CloudGuard pulls your spending from AWS Cost
+CloudCostGuard is a self-hosted AWS cost-monitoring tool. You sign up, paste in a set
+of **read-only** AWS credentials, and CloudCostGuard pulls your spending from AWS Cost
 Explorer, stores it in PostgreSQL, and serves it to a React dashboard. On top of
 the raw numbers it **detects spending anomalies** (statistical spikes, with email
 alerts) and **scans for wasted resources** (idle instances, unattached disks,
@@ -22,7 +22,7 @@ instance behind automatic HTTPS.
 
 ## Screenshots
 
-![CloudGuard dashboard](docs/screenshots/dashboard-light.png)
+![CloudCostGuard dashboard](docs/screenshots/dashboard-light.png)
 
 | Dark mode | Charts (real data) | Empty state |
 |-----------|--------------------|-------------|
@@ -168,7 +168,7 @@ docker compose -f docker-compose.prod.yml up -d --build
 docker compose -f docker-compose.prod.yml exec backend alembic upgrade head
 ```
 
-The full click-by-click runbook — EC2 launch, security-group rules, DNS, billing alarm, and teardown — is in **[docs/deploy.md](docs/deploy.md)**. CloudGuard was deployed this way on AWS EC2 (the instance is currently stopped to avoid charges).
+The full click-by-click runbook — EC2 launch, security-group rules, DNS, billing alarm, and teardown — is in **[docs/deploy.md](docs/deploy.md)**. CloudCostGuard was deployed this way on AWS EC2 (the instance is currently stopped to avoid charges).
 
 ---
 
@@ -320,4 +320,4 @@ cloudguard/
 
 ## Author & license
 
-**Muhammad Azkar** — BSCS final-year project. Licensed under the MIT License.
+**Muhammad Azkar** ([portfolio](https://mazkar.vercel.app)) — BSCS final-year project. Licensed under the MIT License.
